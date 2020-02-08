@@ -1,5 +1,5 @@
 /* Sample CSS for jsGanttImproved v1.8.0 */
-
+@import url('../node_modules/@fortawesome/fontawesome-free/css/all.min.css');
 div.gantt {
   font-family: tahoma, arial, verdana, Sans-serif;
   font-size: 10px;
@@ -738,6 +738,7 @@ td.gspanning div {
   position: absolute;
   top: 0px;
   left: 0px;
+  z-index: 1px;
 }
 
 .gantt-inputtable {

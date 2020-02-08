@@ -33,8 +33,17 @@ export const makeInput = function (formattedValue, editable, type = 'text', valu
 }
 
 export const newNode = function (pParent, pNodeType, pId = null, pClass = null, pText = null,
-  pWidth = null, pLeft = null, pDisplay = null, pColspan = null, pAttribs = null) {
+  pWidth = null, pLeft = null, pDisplay = null, pColspan = null, pAttribs = null, img=null, color='black') {
+
   let vNewNode = pParent.appendChild(document.createElement(pNodeType));
+  if(img){
+    const icon = document.createElement('i')
+    icon.classList.add('fas');
+    icon.classList.add(img);
+    icon.style.color = color;
+    vNewNode.appendChild(icon)
+  }
+
   if (pAttribs) {
     for (let i = 0; i + 1 < pAttribs.length; i += 2) {
       vNewNode.setAttribute(pAttribs[i], pAttribs[i + 1]);
@@ -53,6 +62,7 @@ export const newNode = function (pParent, pNodeType, pId = null, pClass = null, 
   }
   if (pDisplay) vNewNode.style.display = pDisplay;
   if (pColspan) vNewNode.colSpan = pColspan;
+
   return vNewNode;
 };
 

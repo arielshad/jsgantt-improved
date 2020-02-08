@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.JSGantt = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsGantt = require("./src/jsgantt");
@@ -227,13 +227,8 @@ exports.GanttChart = function (pDiv, pFormat) {
             var vTmpTBody = draw_utils_1.newNode(vTmpTab, 'tbody');
             var vTmpRow_1 = draw_utils_1.newNode(vTmpTBody, 'tr');
             draw_utils_1.newNode(vTmpRow_1, 'td', null, 'gtasklist', '\u00A0');
-            var vTmpCell = draw_utils_1.newNode(vTmpRow_1, 'td', null, 'gspanning gtaskname');
+            var vTmpCell = draw_utils_1.newNode(vTmpRow_1, 'td', null, 'gspanning gtaskname', null, null, null, null, this.getColumnOrder().length + 1);
             vTmpCell.appendChild(this.drawSelector('top'));
-            this.getColumnOrder().forEach(function (column) {
-                if (_this[column] == 1 || column === 'vAdditionalHeaders') {
-                    draw_columns_1.draw_list_headings(column, vTmpRow_1, _this.vAdditionalHeaders);
-                }
-            });
             vTmpRow_1 = draw_utils_1.newNode(vTmpTBody, 'tr');
             draw_utils_1.newNode(vTmpRow_1, 'td', null, 'gtasklist', '\u00A0');
             draw_utils_1.newNode(vTmpRow_1, 'td', null, 'gtaskname', '\u00A0');
@@ -507,16 +502,12 @@ exports.GanttChart = function (pDiv, pFormat) {
             for (i = 0; i < this.vTaskList.length; i++) {
                 var curTaskStart = this.vTaskList[i].getStart() ? this.vTaskList[i].getStart() : this.vTaskList[i].getPlanStart();
                 var curTaskEnd = this.vTaskList[i].getEnd() ? this.vTaskList[i].getEnd() : this.vTaskList[i].getPlanEnd();
-                if ((curTaskEnd.getTime() - (curTaskEnd.getTimezoneOffset() * 60000)) % (86400000) == 0)
-                    curTaskEnd = new Date(curTaskEnd.getFullYear(), curTaskEnd.getMonth(), curTaskEnd.getDate() + 1, curTaskEnd.getHours(), curTaskEnd.getMinutes(), curTaskEnd.getSeconds()); // add 1 day here to simplify calculations below
                 vTaskLeftPx = general_utils_1.getOffset(vMinDate, curTaskStart, vColWidth, this.vFormat, this.vShowWeekends);
                 vTaskRightPx = general_utils_1.getOffset(curTaskStart, curTaskEnd, vColWidth, this.vFormat, this.vShowWeekends);
                 var curTaskPlanStart = void 0, curTaskPlanEnd = void 0;
                 curTaskPlanStart = this.vTaskList[i].getPlanStart();
                 curTaskPlanEnd = this.vTaskList[i].getPlanEnd();
                 if (curTaskPlanStart && curTaskPlanEnd) {
-                    if ((curTaskPlanEnd.getTime() - (curTaskPlanEnd.getTimezoneOffset() * 60000)) % (86400000) == 0)
-                        curTaskPlanEnd = new Date(curTaskPlanEnd.getFullYear(), curTaskPlanEnd.getMonth(), curTaskPlanEnd.getDate() + 1, curTaskPlanEnd.getHours(), curTaskPlanEnd.getMinutes(), curTaskPlanEnd.getSeconds()); // add 1 day here to simplify calculations below
                     vTaskPlanLeftPx = general_utils_1.getOffset(vMinDate, curTaskPlanStart, vColWidth, this.vFormat, this.vShowWeekends);
                     vTaskPlanRightPx = general_utils_1.getOffset(curTaskPlanStart, curTaskPlanEnd, vColWidth, this.vFormat, this.vShowWeekends);
                 }
@@ -549,7 +540,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                     if (!vSingleCell && !vComb) {
                         vCellFormat = '';
                         for (j = 0; j < vNumCols - 1; j++) {
-                            if (this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
+                            if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
                                 vCellFormat = 'gtaskcellwkend';
                             else
                                 vCellFormat = 'gtaskcell';
@@ -584,7 +575,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         if (!vSingleCell && !vComb) {
                             vCellFormat = '';
                             for (j = 0; j < vNumCols - 1; j++) {
-                                if (this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
+                                if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
                                     vCellFormat = 'gtaskcellwkend';
                                 else
                                     vCellFormat = 'gtaskcell';
@@ -638,7 +629,7 @@ exports.GanttChart = function (pDiv, pFormat) {
                         if (!vSingleCell && !vComb) {
                             vCellFormat = '';
                             for (j = 0; j < vNumCols - 1; j++) {
-                                if (this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
+                                if (this.vShowWeekends !== false && this.vFormat == 'day' && ((j % 7 == 4) || (j % 7 == 5)))
                                     vCellFormat = 'gtaskcellwkend';
                                 else
                                     vCellFormat = 'gtaskcell';
@@ -665,17 +656,35 @@ exports.GanttChart = function (pDiv, pFormat) {
                     }
                     draw_utils_1.newNode(vTmpDiv, 'div', null, vCaptClass, vCaptionStr, 120, (vCaptClass == 'gmilecaption') ? 12 : 0);
                 }
+                if (this.vTaskList[i].getDataObject().extraDraw) {
+                    var _a = this.vTaskList[i].getDataObject().extraDraw, img = _a.img, label = _a.label, date = _a.date, color = _a.color;
+                    var dayWidth = 21;
+                    var startDate = this.vTaskList[i].getStart();
+                    var datePosition = new Date(date);
+                    var diffTime = (Math.abs(+datePosition - startDate));
+                    var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) - 1;
+                    draw_utils_1.newNode(vTmpDiv, 'div', null, 'JSGanttToolTip', label, 0, diffDays * dayWidth, null, null, null, img, color);
+                }
+                //this.vTaskList[i].getStart()
+                /*
+        
+                  const diffTime = Math.abs(startDate - date1);
+                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                  console.log(diffDays);
+                  console.log("!", extraDraw, this.vTaskList[i].getStart(), this.vTaskList[i].getStartVar(), this.vTaskList[i].getStartX() );
+        
+                * */
                 // Add Task Info div for tooltip
                 if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
                     vTmpDiv2 = draw_utils_1.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
-                    var _a = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _a.component, callback = _a.callback;
+                    var _b = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _b.component, callback = _b.callback;
                     vTmpDiv2.appendChild(component);
                     events_1.addTooltipListeners(this, this.vTaskList[i].getTaskDiv(), vTmpDiv2, callback);
                 }
                 // Add Plan Task Info div for tooltip
                 if (this.vTaskList[i].getPlanTaskDiv() && vTmpDiv) {
                     vTmpDiv2 = draw_utils_1.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
-                    var _b = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _b.component, callback = _b.callback;
+                    var _c = this.createTaskInfo(this.vTaskList[i], this.vTooltipTemplate), component = _c.component, callback = _c.callback;
                     vTmpDiv2.appendChild(component);
                     events_1.addTooltipListeners(this, this.vTaskList[i].getPlanTaskDiv(), vTmpDiv2, callback);
                 }
@@ -1539,10 +1548,11 @@ exports.JSGantt.criticalPath = general_utils_1.criticalPath;
 },{"./draw":2,"./events":5,"./json":7,"./task":10,"./utils/date_utils":11,"./utils/general_utils":13,"./xml":14}],7:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -3031,6 +3041,7 @@ exports.TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRe
     if (pDuration === void 0) { pDuration = null; }
     if (pBarText === void 0) { pBarText = null; }
     if (pDataObject === void 0) { pDataObject = null; }
+    console.log(pDataObject.extraDraw);
     var vGantt = pGantt ? pGantt : this;
     var _id = document.createTextNode(pID).data;
     var vID = general_utils_1.hashKey(document.createTextNode(pID).data);
@@ -3961,7 +3972,7 @@ exports.makeInput = function (formattedValue, editable, type, value, choices) {
         return formattedValue;
     }
 };
-exports.newNode = function (pParent, pNodeType, pId, pClass, pText, pWidth, pLeft, pDisplay, pColspan, pAttribs) {
+exports.newNode = function (pParent, pNodeType, pId, pClass, pText, pWidth, pLeft, pDisplay, pColspan, pAttribs, img, color) {
     if (pId === void 0) { pId = null; }
     if (pClass === void 0) { pClass = null; }
     if (pText === void 0) { pText = null; }
@@ -3970,7 +3981,16 @@ exports.newNode = function (pParent, pNodeType, pId, pClass, pText, pWidth, pLef
     if (pDisplay === void 0) { pDisplay = null; }
     if (pColspan === void 0) { pColspan = null; }
     if (pAttribs === void 0) { pAttribs = null; }
+    if (img === void 0) { img = null; }
+    if (color === void 0) { color = 'black'; }
     var vNewNode = pParent.appendChild(document.createElement(pNodeType));
+    if (img) {
+        var icon = document.createElement('i');
+        icon.classList.add('fas');
+        icon.classList.add(img);
+        icon.style.color = color;
+        vNewNode.appendChild(icon);
+    }
     if (pAttribs) {
         for (var i = 0; i + 1 < pAttribs.length; i += 2) {
             vNewNode.setAttribute(pAttribs[i], pAttribs[i + 1]);

@@ -77,6 +77,7 @@ export const TaskItemObject = function (object) {
 
 export const TaskItem = function (pID, pName, pStart, pEnd, pClass, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen,
   pDepend, pCaption, pNotes, pGantt, pCost = null, pPlanStart = null, pPlanEnd = null, pDuration = null, pBarText = null, pDataObject = null) {
+  console.log(pDataObject.extraDraw);
   let vGantt = pGantt ? pGantt : this;
   let _id = document.createTextNode(pID).data;
   let vID = hashKey(document.createTextNode(pID).data);
