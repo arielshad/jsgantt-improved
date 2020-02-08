@@ -665,15 +665,6 @@ exports.GanttChart = function (pDiv, pFormat) {
                     var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) - 1;
                     draw_utils_1.newNode(vTmpDiv, 'div', null, 'JSGanttToolTip', label, 0, diffDays * dayWidth, null, null, null, img, color);
                 }
-                //this.vTaskList[i].getStart()
-                /*
-        
-                  const diffTime = Math.abs(startDate - date1);
-                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                  console.log(diffDays);
-                  console.log("!", extraDraw, this.vTaskList[i].getStart(), this.vTaskList[i].getStartVar(), this.vTaskList[i].getStartX() );
-        
-                * */
                 // Add Task Info div for tooltip
                 if (this.vTaskList[i].getTaskDiv() && vTmpDiv) {
                     vTmpDiv2 = draw_utils_1.newNode(vTmpDiv, 'div', this.vDivId + 'tt' + vID, null, null, null, null, 'none');
